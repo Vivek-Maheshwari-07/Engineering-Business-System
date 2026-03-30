@@ -38,6 +38,8 @@ const registerUser = async (req, res) => {
             otpExpiry
         );
 
+        console.log(`🔑 Registration OTP for ${email}: ${otp}`);
+
         // Send OTP via email
         const message = `Welcome ${name}! Your OTP for registration is: ${otp}. It is valid for 5 minutes.`;
 
@@ -113,6 +115,53 @@ const verifyOTP = async (req, res) => {
     }
 };
 
+// @desc    Resend OTP
+// @route   POST /api/auth/resend-otp
+// @access  Public
+const resendOTP = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: "Please provide email" });
+        }
+
+        // Find user
+        const user = await User.findByEmail(email);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.is_verified) {
+            return res.status(400).json({ message: "User already verified" });
+        }
+
+        // Generate new 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+        // Update User in DB with new OTP
+        await User.updateOTP(user.id, otp, otpExpiry);
+
+        console.log(`🔑 Resent OTP for ${email}: ${otp}`);
+
+        // Send OTP via email
+        const message = `Your new verification OTP is: ${otp}. It is valid for 5 minutes.`;
+
+        await sendEmail({
+            email: user.email,
+            subject: "Resend OTP Verification",
+            message,
+        });
+
+        res.status(200).json({ message: "A new OTP has been sent to your email." });
+    } catch (error) {
+        console.error("Resend OTP Error:", error);
+        res.status(500).json({ message: "Server error during OTP resend" });
+    }
+};
+
 // @desc    Auth user & get token (Login)
 // @route   POST /api/auth/login
 // @access  Public
@@ -161,5 +210,6 @@ const loginUser = async (req, res) => {
 module.exports = {
     registerUser,
     verifyOTP,
+    resendOTP,
     loginUser,
 };

@@ -8,7 +8,7 @@ const createUsersTable = async () => {
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
-      role ENUM('owner', 'employee', 'customer') DEFAULT 'customer',
+      role ENUM('admin', 'employee', 'customer') DEFAULT 'customer',
       otp VARCHAR(10),
       otp_expiry DATETIME,
       is_verified BOOLEAN DEFAULT false,
