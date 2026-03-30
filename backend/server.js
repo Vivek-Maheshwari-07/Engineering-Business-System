@@ -31,8 +31,11 @@ const app = express();
 
 // Middleware: Enable CORS for the React frontend
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "https://3e2e-2401-4900-1a87-d613-716f-8688-a609-828f.ngrok-free.app"],
+    origin: function (origin, callback) {
+        callback(null, true);
+    },
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
 }));
 
 // Middleware: parse JSON bodies
