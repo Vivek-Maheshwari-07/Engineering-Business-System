@@ -1,41 +1,59 @@
-const mysql = require("mysql2");
+const { Pool } = require("pg");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
-// Create connection pool
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+// Create connection pool for PostgreSQL
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    // For Supabase, ssl might be required depending on network setup
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
-// Convert pool to use promises
-const promisePool = pool.promise();
+// We can monkey-patch .execute() to map to .query() to minimize code changes 
+// in other controllers that previously called promisePool.execute() from mysql2.
+// mysql2 usually returns [rows, fields]. pg returns { rows, fields }.
+const promisePool = {
+    execute: async (text, params) => {
+        // Convert mysql ? placeholders to pg $1, $2, etc.
+        let pgText = text;
+        if (params && params.length > 0) {
+            let i = 1;
+            pgText = text.replace(/\?/g, () => `$${i++}`);
+        }
+        
+        try {
+            const res = await pool.query(pgText, params);
+            // Return an array matching mysql2's expected output format of [rows, fields]
+            // Polyfill insertId and affectedRows
+            let resultInfo = res.rows;
+            if (res.command === 'INSERT' || res.command === 'UPDATE' || res.command === 'DELETE') {
+                resultInfo = []; // Usually mysql2 returns an object for write operations in place of rows
+                resultInfo.affectedRows = res.rowCount;
+                if (res.command === 'INSERT' && res.rows.length > 0 && res.rows[0].id) {
+                    resultInfo.insertId = res.rows[0].id;
+                }
+            }
+            return [resultInfo, res.fields];
+        } catch (error) {
+            console.error('Database query error:', error);
+            throw error;
+        }
+    },
+    query: async (text, params) => {
+        return promisePool.execute(text, params);
+    }
+};
 
 // Initial connection test
-pool.getConnection((err, connection) => {
+pool.connect((err, client, release) => {
     if (err) {
-        if (err.code === "PROTOCOL_CONNECTION_LOST") {
-            console.error("Database connection was closed.");
-        }
-        if (err.code === "ER_CON_COUNT_ERROR") {
-            console.error("Database has too many connections.");
-        }
-        if (err.code === "ECONNREFUSED") {
-            console.error("Database connection was refused.");
-        }
-        if (err.code === "ER_BAD_DB_ERROR") {
-            console.error(`Database ${process.env.DB_NAME} not found. You might need to create it first.`);
-        }
-    }
-    if (connection) {
-        console.log("Successfully connected to MySQL database");
-        connection.release();
+        console.error("Error acquiring client from PostgreSQL connection pool:", err.stack);
+    } else {
+        console.log("Successfully connected to PostgreSQL (Supabase) database");
+        release();
     }
 });
 

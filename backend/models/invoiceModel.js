@@ -3,7 +3,7 @@ const db = require('../config/db');
 const createInvoiceTables = async () => {
     const invoiceQuery = `
     CREATE TABLE IF NOT EXISTS invoices (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       invoice_number VARCHAR(50) UNIQUE NOT NULL,
       customer_id INT,
       customer_name VARCHAR(255) NOT NULL,
@@ -14,7 +14,7 @@ const createInvoiceTables = async () => {
       gst_rate DECIMAL(5,2) DEFAULT 18.00,
       gst_amount DECIMAL(10,2) DEFAULT 0.00,
       total DECIMAL(10,2) DEFAULT 0.00,
-      status ENUM('draft', 'sent', 'paid', 'overdue') DEFAULT 'draft',
+      status VARCHAR(20) DEFAULT 'draft',
       due_date DATE,
       notes TEXT,
       created_by INT,
@@ -25,7 +25,7 @@ const createInvoiceTables = async () => {
 
     const itemsQuery = `
     CREATE TABLE IF NOT EXISTS invoice_items (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       invoice_id INT NOT NULL,
       description VARCHAR(255) NOT NULL,
       hsn_code VARCHAR(20),
@@ -63,7 +63,7 @@ const Invoice = {
     create: async (invoiceData, items, createdBy) => {
         const { invoice_number, customer_id, customer_name, customer_email, customer_address, customer_gstin, subtotal, gst_rate, gst_amount, total, status, due_date, notes } = invoiceData;
         const [result] = await db.query(
-            'INSERT INTO invoices (invoice_number, customer_id, customer_name, customer_email, customer_address, customer_gstin, subtotal, gst_rate, gst_amount, total, status, due_date, notes, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            'INSERT INTO invoices (invoice_number, customer_id, customer_name, customer_email, customer_address, customer_gstin, subtotal, gst_rate, gst_amount, total, status, due_date, notes, created_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id',
             [invoice_number, customer_id, customer_name, customer_email, customer_address, customer_gstin, subtotal, gst_rate, gst_amount, total, status, due_date, notes, createdBy]
         );
         const invoiceId = result.insertId;

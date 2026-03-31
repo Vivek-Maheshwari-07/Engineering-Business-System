@@ -4,21 +4,21 @@ const db = require('../config/db');
 const createOrdersTable = async () => {
     const ordersTableQuery = `
     CREATE TABLE IF NOT EXISTS orders (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       order_number VARCHAR(50) UNIQUE NOT NULL,
       customer_id INT,
       subtotal DECIMAL(10,2) NOT NULL,
-      status ENUM('pending', 'approved', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
+      status VARCHAR(20) DEFAULT 'pending',
       notes TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `;
 
     const orderItemsTableQuery = `
     CREATE TABLE IF NOT EXISTS order_items (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       order_id INT,
       inventory_id INT,
       quantity INT NOT NULL,
@@ -70,7 +70,7 @@ const Order = {
     create: async (orderData, items, customerId) => {
         const { order_number, subtotal, notes } = orderData;
         const [result] = await db.query(
-            'INSERT INTO orders (order_number, customer_id, subtotal, status, notes) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO orders (order_number, customer_id, subtotal, status, notes) VALUES (?, ?, ?, ?, ?) RETURNING id',
             [order_number, customerId, subtotal, 'pending', notes]
         );
         const orderId = result.insertId;

@@ -3,7 +3,7 @@ const db = require('../config/db');
 const createEmployeesTable = async () => {
     const query = `
     CREATE TABLE IF NOT EXISTS employees (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       user_id INT,
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
@@ -12,7 +12,7 @@ const createEmployeesTable = async () => {
       designation VARCHAR(100),
       salary DECIMAL(10,2) DEFAULT 0.00,
       join_date DATE,
-      status ENUM('active', 'inactive') DEFAULT 'active',
+      status VARCHAR(20) DEFAULT 'active',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
     )`;
@@ -36,7 +36,7 @@ const Employee = {
     create: async (data) => {
         const { name, email, phone, department, designation, salary, join_date } = data;
         const [result] = await db.query(
-            'INSERT INTO employees (name, email, phone, department, designation, salary, join_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO employees (name, email, phone, department, designation, salary, join_date) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id',
             [name, email, phone, department, designation, salary, join_date]
         );
         return result.insertId;

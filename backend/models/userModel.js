@@ -4,13 +4,13 @@ const db = require('../config/db');
 const createUsersTable = async () => {
     const query = `
     CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
-      role ENUM('admin', 'employee', 'customer') DEFAULT 'customer',
+      role VARCHAR(20) DEFAULT 'customer',
       otp VARCHAR(10),
-      otp_expiry DATETIME,
+      otp_expiry TIMESTAMP,
       is_verified BOOLEAN DEFAULT false,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
@@ -26,7 +26,7 @@ const createUsersTable = async () => {
 const User = {
     // Create a new user (during registration)
     create: async (name, email, hashedPassword, role, otp, otpExpiry) => {
-        const query = `INSERT INTO users (name, email, password, role, otp, otp_expiry, is_verified) VALUES (?, ?, ?, ?, ?, ?, false)`;
+        const query = `INSERT INTO users (name, email, password, role, otp, otp_expiry, is_verified) VALUES (?, ?, ?, ?, ?, ?, false) RETURNING id`;
         const [result] = await db.query(query, [name, email, hashedPassword, role, otp, otpExpiry]);
         return result.insertId;
     },

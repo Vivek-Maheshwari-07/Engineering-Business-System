@@ -3,7 +3,7 @@ const db = require('../config/db');
 const createInventoryTable = async () => {
     const query = `
     CREATE TABLE IF NOT EXISTS inventory (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       category VARCHAR(100),
       sku VARCHAR(100) UNIQUE,
@@ -14,9 +14,9 @@ const createInventoryTable = async () => {
       min_stock INT DEFAULT 5,
       supplier VARCHAR(255),
       description TEXT,
-      status ENUM('in_stock', 'low_stock', 'out_of_stock') DEFAULT 'in_stock',
+      status VARCHAR(20) DEFAULT 'in_stock',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`;
     try {
         await db.query(query);
@@ -43,7 +43,7 @@ const Inventory = {
         const { name, category, sku, hsn_code, quantity, unit, price, min_stock, supplier, description } = data;
         const status = quantity <= 0 ? 'out_of_stock' : quantity <= min_stock ? 'low_stock' : 'in_stock';
         const [result] = await db.query(
-            'INSERT INTO inventory (name, category, sku, hsn_code, quantity, unit, price, min_stock, supplier, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO inventory (name, category, sku, hsn_code, quantity, unit, price, min_stock, supplier, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id',
             [name, category, sku, hsn_code, quantity, unit, price, min_stock, supplier, description, status]
         );
         return result.insertId;

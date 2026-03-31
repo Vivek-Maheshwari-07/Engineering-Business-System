@@ -56,7 +56,12 @@ app.get("/", (req, res) => {
   res.send("Server running successfully 🚀");
 });
 
-// 5️⃣ Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// 5️⃣ Start server locally (if not on Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for serverless
+module.exports = app;
