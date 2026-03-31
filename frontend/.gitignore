@@ -25,3 +25,5 @@ dist-ssr
 
 lint-results.txt
 eslint-results*.json
+.vercel
+.env*.local
