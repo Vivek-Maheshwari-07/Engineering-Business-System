@@ -1,0 +1,13 @@
+{
+  "name": "engineering-erp",
+  "version": "1.0.0",
+  "description": "Engineering Business ERP system full-stack setup.",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm run dev --prefix backend",
+    "client": "npm run dev --prefix frontend"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
