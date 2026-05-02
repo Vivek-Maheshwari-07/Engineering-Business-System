@@ -74,10 +74,11 @@ const productModel = {
         const productIds  = products.map(p => p.id);
 
         // PROBLEM 1 FIX: JOIN inventory so quantity_available travels with each variant
+        // Fallback to initial stock (v.quantity) if no active inventory tracking record exists
         const [variants] = await pool.query(
             `SELECT
                 v.id, v.product_id, v.size, v.quantity, v.unit, v.price,
-                COALESCE(i.quantity_available, 0) AS quantity_available
+                COALESCE(i.quantity_available, v.quantity) AS quantity_available
              FROM product_variants v
              LEFT JOIN inventory i ON i.variant_id = v.id
              WHERE v.product_id IN (?)`,

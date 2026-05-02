@@ -91,8 +91,8 @@ const orderController = {
                 return res.status(404).json({ message: 'Order not found.' });
             }
 
-            // Customers can only view their own orders
-            if (role === 'customer' && targetOrder.customer_id !== id) {
+            // Customers can only view their own orders — cast both sides to Number to avoid string vs int mismatch
+            if (role === 'customer' && Number(targetOrder.customer_id) !== Number(id)) {
                 return res.status(403).json({ message: 'Access denied.' });
             }
 

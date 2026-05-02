@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getAllProducts, deleteProduct } from '../../services/productService';
-import { Loader2, Plus, Edit, Trash2, Eye, PackageOpen } from 'lucide-react';
+import { Loader2, Edit, Trash2, Eye, PackageOpen, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const API_URL = 'http://localhost:5000';

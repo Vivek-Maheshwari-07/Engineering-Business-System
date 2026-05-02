@@ -49,6 +49,13 @@ const initializeDatabase = async () => {
         `);
         console.log(`[DB] Table schema 'users' verified successfully.`);
 
+        // Conditionally add phone column to users if not present
+        const [userPhoneCols] = await connection.query(`SHOW COLUMNS FROM users LIKE 'phone'`);
+        if (userPhoneCols.length === 0) {
+            await connection.query(`ALTER TABLE users ADD COLUMN phone VARCHAR(20) DEFAULT NULL AFTER email`);
+            console.log(`[DB] Appended 'phone' column to 'users' table successfully.`);
+        }
+
         // Append explicit creation of Products Table mapping
         await connection.query(`
             CREATE TABLE IF NOT EXISTS products (

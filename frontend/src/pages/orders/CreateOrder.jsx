@@ -132,8 +132,13 @@ const CreateOrder = () => {
     const hasOutOfStock = enrichedRows.some(r => r.variant_id && !r.stockOk);
 
     // ── Submit ─────────────────────────────────────────────────────────────
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        console.log("Place Order button clicked!");
+
         const validItems = enrichedRows.filter(r => r.variant_id && r.qty > 0);
+        console.log("Valid items:", validItems);
+
         if (validItems.length === 0) {
             toast.error('Add at least one item with a variant and quantity.');
             return;
@@ -153,18 +158,29 @@ const CreateOrder = () => {
             }
         }
 
-        const confirmed = window.confirm(
-            `Place order for ₹${finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })} (incl. 18% GST)?`
-        );
-        if (!confirmed) return;
+        try {
+            const confirmed = window.confirm(
+                `Place order for ₹${finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })} (incl. 18% GST)?`
+            );
+            if (!confirmed) {
+                console.log("Order placement cancelled by user.");
+                return;
+            }
+        } catch (err) {
+            console.warn("window.confirm blocked or failed, proceeding anyway", err);
+        }
 
+        console.log("Proceeding to API call...");
         setSubmitting(true);
         try {
             const items = validItems.map(r => ({ variant_id: Number(r.variant_id), quantity: r.qty }));
-            await createOrder({ items });
+            const payload = { items };
+            console.log("API Payload:", payload);
+            await createOrder(payload);
             toast.success('Order placed successfully!');
             navigate('/orders');
         } catch (err) {
+            console.error("API call failed:", err);
             toast.error(err?.response?.data?.message || 'Failed to place order.');
         } finally {
             setSubmitting(false);
@@ -448,6 +464,7 @@ const CreateOrder = () => {
 
                     {/* Place order button */}
                     <button
+                        type="button"
                         onClick={handleSubmit}
                         disabled={submitting || !hasItems || hasOutOfStock}
                         style={{
@@ -458,7 +475,8 @@ const CreateOrder = () => {
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                             cursor: (submitting || !hasItems || hasOutOfStock) ? 'not-allowed' : 'pointer',
                             transition: 'background-color 0.2s',
-                            boxShadow: (hasItems && !hasOutOfStock) ? '0 4px 12px rgba(22,163,74,0.4)' : 'none'
+                            boxShadow: (hasItems && !hasOutOfStock) ? '0 4px 12px rgba(22,163,74,0.4)' : 'none',
+                            position: 'relative', zIndex: 50, pointerEvents: 'auto'
                         }}
                         onMouseOver={e => { if (!submitting && hasItems && !hasOutOfStock) e.currentTarget.style.backgroundColor = '#15803d'; }}
                         onMouseOut={e => { if (!submitting && hasItems && !hasOutOfStock) e.currentTarget.style.backgroundColor = '#16a34a'; }}

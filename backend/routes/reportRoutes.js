@@ -26,4 +26,7 @@ router.get('/inventory', ...reportAccess, reportController.getInventoryReport);
 // GET /api/reports/order-status     → Order count and value per status
 router.get('/order-status', ...reportAccess, reportController.getOrderStatusBreakdown);
 
+// GET /api/reports/payment-summary  → Alias for order-status matching frontend payment chart requirements
+router.get('/payment-summary', ...reportAccess, reportController.getOrderStatusBreakdown);
+
 module.exports = router;

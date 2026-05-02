@@ -132,28 +132,42 @@ const InvoiceView = () => {
         </div>
     );
 
-    const items          = Array.isArray(invoice.items) ? invoice.items : [];
-    const taxable        = Number(invoice.taxable_amount) || 0;
-    const cgst           = Number(invoice.cgst)           || 0;
-    const sgst           = Number(invoice.sgst)           || 0;
-    const totalTax       = Number(invoice.total_tax)      || 0;
-    const finalAmount    = Number(invoice.final_amount)   || 0;
-    const totalQty       = items.reduce((s,i) => s + Number(i.quantity||0), 0);
-    const orderDate      = invoice.order_created_at || invoice.created_at || new Date();
-    const invoiceNo      = String(invoice.id || order_id).padStart(4, '0');
+    const items     = Array.isArray(invoice.items) ? invoice.items : [];
+    const totalQty  = items.reduce((s, i) => s + Number(i.quantity || 0), 0);
+    const orderDate = invoice.order_created_at || invoice.created_at || new Date();
+    const invoiceNo = String(invoice.id || order_id).padStart(4, '0');
+    const custPhone = invoice.customer_phone || '—';
 
-    // Per-item GST calc
+    // Per-item GST calc (CGST 9% + SGST 9%)
     const rows = items.map(item => {
-        const sub  = Number(item.subtotal) || (Number(item.quantity) * Number(item.price));
+        const qty  = Number(item.quantity)  || 0;
+        const rate = Number(item.price)     || 0;
+        const sub  = Number(item.subtotal)  || +(qty * rate).toFixed(2);
         const cAmt = +(sub * 0.09).toFixed(2);
         const sAmt = +(sub * 0.09).toFixed(2);
         const tot  = +(sub + cAmt + sAmt).toFixed(2);
-        return { ...item, subtotal: sub, cAmt, sAmt, tot, hsn: getHSN(item.product_name) };
+        return {
+            ...item,
+            product_name: item.product_name || 'Product',
+            size:         item.size         || '—',
+            unit:         item.unit         || '',
+            subtotal: sub, cAmt, sAmt, tot,
+            hsn: getHSN(item.product_name)
+        };
     });
 
-    const totalCGST = rows.reduce((s,r) => s + r.cAmt, 0);
-    const totalSGST = rows.reduce((s,r) => s + r.sAmt, 0);
-    const totalAmt  = rows.reduce((s,r) => s + r.tot, 0);
+    // Computed totals from line items (authoritative, never 0)
+    const totalCGST = +rows.reduce((s, r) => s + r.cAmt, 0).toFixed(2);
+    const totalSGST = +rows.reduce((s, r) => s + r.sAmt, 0).toFixed(2);
+    const totalAmt  = +rows.reduce((s, r) => s + r.tot,  0).toFixed(2);
+    const taxable   = +rows.reduce((s, r) => s + r.subtotal, 0).toFixed(2);
+
+    // Use DB values if available, fall back to computed
+    const dbTaxable     = Number(invoice.taxable_amount) || taxable;
+    const dbCGST        = Number(invoice.cgst)           || totalCGST;
+    const dbSGST        = Number(invoice.sgst)           || totalSGST;
+    const dbTotalTax    = Number(invoice.total_tax)      || +(totalCGST + totalSGST).toFixed(2);
+    const finalAmount   = Number(invoice.final_amount)   || totalAmt;
 
     return (
         <div style={{maxWidth:'230mm',margin:'0 auto',fontFamily:"'Inter',sans-serif"}}>
@@ -204,7 +218,7 @@ const InvoiceView = () => {
                             <tbody>
                                 <tr><td style={{fontWeight:'bold',width:'50px',paddingBottom:'2px'}}>M/S</td><td style={{fontWeight:'bold'}}>{invoice.customer_name}</td></tr>
                                 <tr><td style={{fontWeight:'bold',paddingBottom:'2px'}}>Address</td><td>{invoice.customer_email}</td></tr>
-                                <tr><td style={{fontWeight:'bold',paddingBottom:'2px'}}>Phone</td><td>—</td></tr>
+                                <tr><td style={{fontWeight:'bold',paddingBottom:'2px'}}>Phone</td><td>{custPhone}</td></tr>
                                 <tr><td style={{fontWeight:'bold',paddingBottom:'2px'}}>GSTIN</td><td>—</td></tr>
                                 <tr><td style={{fontWeight:'bold'}}>PAN</td><td>—</td></tr>
                             </tbody>
@@ -303,15 +317,15 @@ const InvoiceView = () => {
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',border:'1px solid #000',borderTop:'none'}}>
                     <div style={{borderRight:'1px solid #000',padding:'6px'}}>
                         <div style={{fontSize:'9px',fontWeight:'bold',marginBottom:'2px'}}>Total in words</div>
-                        <div style={{fontSize:'10px',fontWeight:'bold',textTransform:'uppercase',color:'#111'}}>{amountToWords(finalAmount)}</div>
+                        <div style={{fontSize:'10px',fontWeight:'bold',textTransform:'uppercase',color:'#111'}}>{amountToWords(finalAmount || totalAmt)}</div>
                     </div>
                     <div style={{padding:'6px'}}>
                         <table style={{width:'100%',fontSize:'10px'}}>
                             <tbody>
                                 <tr><td>Taxable Amount</td><td style={{textAlign:'right',fontWeight:'bold'}}>{fmtINR(taxable)}</td></tr>
-                                <tr><td>Add: CGST</td><td style={{textAlign:'right'}}>{fmtINR(cgst)}</td></tr>
-                                <tr><td>Add: SGST</td><td style={{textAlign:'right'}}>{fmtINR(sgst)}</td></tr>
-                                <tr><td style={{fontWeight:'bold'}}>Total Tax</td><td style={{textAlign:'right',fontWeight:'bold'}}>{fmtINR(totalTax)}</td></tr>
+                                <tr><td>Add: CGST @ 9%</td><td style={{textAlign:'right'}}>{fmtINR(dbCGST)}</td></tr>
+                                <tr><td>Add: SGST @ 9%</td><td style={{textAlign:'right'}}>{fmtINR(dbSGST)}</td></tr>
+                                <tr><td style={{fontWeight:'bold'}}>Total Tax</td><td style={{textAlign:'right',fontWeight:'bold'}}>{fmtINR(dbTotalTax)}</td></tr>
                                 <tr style={{borderTop:'2px solid #000'}}>
                                     <td style={{fontWeight:'bold',fontSize:'12px',paddingTop:'4px'}}>Total Amount After Tax</td>
                                     <td style={{textAlign:'right',fontWeight:'bold',fontSize:'13px',paddingTop:'4px'}}>₹{fmtINR(finalAmount)}</td>
@@ -381,3 +395,6 @@ const InvoiceView = () => {
 };
 
 export default InvoiceView;
+
+
+

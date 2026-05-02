@@ -20,8 +20,9 @@ const orderModel = {
                 }
 
                 // Verify the Product bounds and Native Price cleanly
+                // Fallback to initial stock (v.quantity) if no active inventory tracking record exists
                 const [vRows] = await connection.query(
-                    `SELECT v.price, i.quantity_available 
+                    `SELECT v.price, COALESCE(i.quantity_available, v.quantity) AS quantity_available 
                      FROM product_variants v 
                      LEFT JOIN inventory i ON v.id = i.variant_id 
                      WHERE v.id = ? FOR UPDATE`,
@@ -133,7 +134,7 @@ const orderModel = {
     getOrderDetails: async (order_id) => {
         // Retrieve internal Order Meta implicitly
         const [oRows] = await pool.query(`
-            SELECT o.*, u.name as customer_name, u.email as customer_email
+            SELECT o.*, u.name as customer_name, u.email as customer_email, u.phone as customer_phone
             FROM orders o JOIN users u ON o.customer_id = u.id 
             WHERE o.id = ?`, 
         [order_id]);

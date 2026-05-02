@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createProduct } from '../../services/productService';
-import { Plus, Save, X, UploadCloud, ChevronLeft, Loader2 } from 'lucide-react';
+import { Plus, Save, X, UploadCloud, ChevronLeft, Loader2, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Input from '../../components/Input';
 
@@ -281,6 +281,4 @@ const ProductAdd = () => {
   );
 };
 
-// Assuming lucide-react Trash2 maps directly implicitly natively in component logic bounding array
-import { Trash2 } from 'lucide-react';
 export default ProductAdd;

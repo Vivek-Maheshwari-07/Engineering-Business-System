@@ -6,3 +6,4 @@ export const getTopProducts         = (limit = 10)  => api.get(`/reports/top-pro
 export const getGSTReport           = ()            => api.get('/reports/gst');
 export const getInventoryReport     = ()            => api.get('/reports/inventory');
 export const getOrderStatusReport   = ()            => api.get('/reports/order-status');
+export const getPaymentSummary      = ()            => api.get('/reports/payment-summary');
