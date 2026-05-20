@@ -14,48 +14,52 @@ const Sidebar = () => {
         const isActive = location.pathname.startsWith(path) && (path !== '/' || location.pathname === '/');
         return {
             display: 'flex', alignItems: 'center', gap: '0.75rem',
-            padding: '0.75rem 1.1rem', marginBottom: '0.15rem',
-            borderRadius: '8px', textDecoration: 'none',
-            color: isActive ? '#15803d' : '#4b5563',
-            backgroundColor: isActive ? '#dcfce7' : 'transparent',
-            fontWeight: isActive ? '600' : '500',
-            fontSize: '0.9rem',
-            transition: 'all 0.15s',
-            borderLeft: isActive ? '3px solid #16a34a' : '3px solid transparent',
+            padding: '0.75rem 1.1rem', marginBottom: '0.35rem',
+            borderRadius: '14px', textDecoration: 'none',
+            color: isActive ? 'var(--color-primary-dark)' : 'var(--color-gray-dark)',
+            backgroundColor: isActive ? 'rgba(16, 185, 129, 0.08)' : 'transparent',
+            fontWeight: isActive ? '700' : '500',
+            fontSize: '0.95rem',
+            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            borderLeft: isActive ? '4px solid var(--color-primary)' : '4px solid transparent',
+            paddingLeft: isActive ? '1.25rem' : '1.1rem',
         };
     };
 
     const Section = ({ label }) => (
         <p style={{
-            fontSize: '0.68rem', textTransform: 'uppercase', color: '#9ca3af',
-            fontWeight: '800', margin: '1.25rem 0 0.4rem 0',
+            fontSize: '0.68rem', textTransform: 'uppercase', color: '#94a3b8',
+            fontWeight: '700', margin: '1.25rem 0 0.5rem 0',
             paddingLeft: '1.1rem', letterSpacing: '0.08em'
         }}>{label}</p>
     );
 
     return (
         <aside style={{
-            width: '240px', backgroundColor: '#ffffff',
-            borderRight: '1px solid #e5e7eb',
+            width: '260px', backgroundColor: 'var(--color-white)',
+            borderRight: '1px solid rgba(15, 23, 42, 0.05)',
             display: 'flex', flexDirection: 'column',
-            height: '100%', overflowY: 'auto', flexShrink: 0
+            height: '100%', overflowY: 'auto', flexShrink: 0,
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.01)',
         }}>
             {/* Logo */}
-            <div style={{ padding: '1.25rem 1.25rem 1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                <div style={{ width: '34px', height: '34px', backgroundColor: '#16a34a', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ padding: '1.5rem 1.25rem', borderBottom: '1px solid rgba(15, 23, 42, 0.05)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ width: '38px', height: '38px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)' }}>
                     <Boxes color="#ffffff" size={20} />
                 </div>
                 <div>
-                    <div style={{ fontSize: '1rem', fontWeight: '800', color: '#111827', lineHeight: 1.2 }}>Engg ERP</div>
-                    <div style={{ fontSize: '0.68rem', color: '#9ca3af', fontWeight: '500' }}>Business System</div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: '800', color: '#0f172a', lineHeight: 1.2, fontFamily: "'Outfit', sans-serif" }}>Hari Krupa</div>
+                    <div style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Engineering ERP</div>
                 </div>
             </div>
 
             <nav style={{ padding: '0.75rem', flex: 1 }}>
                 <Section label="General" />
-                <Link to="/" style={getLinkStyle('/')}>
-                    <LayoutDashboard size={18} /> Dashboard
-                </Link>
+                {role !== 'customer' && (
+                    <Link to="/" style={getLinkStyle('/')}>
+                        <LayoutDashboard size={18} /> Dashboard
+                    </Link>
+                )}
                 <Link to="/products" style={getLinkStyle('/products')}>
                     <Package size={18} /> Product Catalog
                 </Link>
@@ -120,12 +124,12 @@ const Sidebar = () => {
             </nav>
 
             {/* Role badge */}
-            <div style={{ padding: '1rem', borderTop: '1px solid #e5e7eb' }}>
-                <div style={{ backgroundColor: '#f0fdf4', borderRadius: '8px', padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.625rem', border: '1px solid #bbf7d0' }}>
-                    <div style={{ width: '8px', height: '8px', backgroundColor: '#16a34a', borderRadius: '50%', flexShrink: 0 }} />
+            <div style={{ padding: '1.25rem 1rem', borderTop: '1px solid rgba(15, 23, 42, 0.05)' }}>
+                <div style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.1)', borderRadius: '16px' }}>
+                    <div style={{ width: '8px', height: '8px', backgroundColor: '#10b981', borderRadius: '50%', boxShadow: '0 0 8px #10b981', flexShrink: 0 }} />
                     <div>
-                        <div style={{ fontSize: '0.7rem', color: '#6b7280', fontWeight: '600' }}>Logged in as</div>
-                        <div style={{ fontSize: '0.825rem', color: '#166534', fontWeight: '800', textTransform: 'capitalize' }}>{role}</div>
+                        <div style={{ fontSize: '0.65rem', color: 'var(--color-gray-dark)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Logged in as</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--color-primary-dark)', fontWeight: '700', textTransform: 'capitalize' }}>{role}</div>
                     </div>
                 </div>
             </div>

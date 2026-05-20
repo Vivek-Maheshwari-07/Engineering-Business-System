@@ -250,6 +250,24 @@ const initializeDatabase = async () => {
             c2.release();
         }
 
+        // --- SEED DEFAULT USERS FOR TESTING ---
+        const seedUsers = async () => {
+            console.log(`[DB] Seeding default users (test@example.com and customer@example.com)...`);
+            const bcrypt = require('bcrypt');
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash('password', salt);
+            
+            await pool.query(
+                `INSERT IGNORE INTO users (name, email, password, role, is_verified) VALUES 
+                ('Admin User', 'test@example.com', ?, 'owner', true),
+                ('Demo Customer', 'customer@example.com', ?, 'customer', true)`
+                , [hashedPassword, hashedPassword]
+            );
+            console.log(`[DB] Default users seeded successfully.`);
+        };
+        await seedUsers();
+        // --------------------------------------
+
         // 4. Test internal pool connection stability
         const poolConnection = await pool.getConnection();
         console.log(`[DB SUCCESS] MySQL Connected to '${dbConfig.database}' pool successfully.`);

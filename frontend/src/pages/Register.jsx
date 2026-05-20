@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { registerUser } from '../services/auth';
+import { Boxes } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -41,20 +42,36 @@ const Register = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: '80vh'
+      minHeight: '90vh',
+      padding: '2.4rem',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
-      <div style={{
-        backgroundColor: '#ffffff',
-        padding: '2.5rem',
-        borderRadius: '8px',
-        boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)',
+      {/* Ambient glowing backdrops */}
+      <div style={{ position: 'absolute', top: '10%', right: '15%', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(16, 185, 129, 0.07) 0%, rgba(255, 255, 255, 0) 70%)', zIndex: 0, filter: 'blur(30px)' }} />
+      <div style={{ position: 'absolute', bottom: '10%', left: '15%', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0) 70%)', zIndex: 0, filter: 'blur(40px)' }} />
+
+      <div className="glass-panel" style={{
+        padding: '3rem 2.5rem',
         width: '100%',
-        maxWidth: '450px'
+        maxWidth: '480px',
+        position: 'relative',
+        zIndex: 1,
+        boxShadow: '0 20px 50px rgba(15, 23, 42, 0.06)',
+        border: '1px solid rgba(255, 255, 255, 0.8)'
       }}>
-        <h2 style={{ textAlign: 'center', color: '#166534', marginBottom: '1.5rem', marginTop: 0 }}>Create Account</h2>
+        {/* Logo Indicator */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+          <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(16, 185, 129, 0.25)' }}>
+            <Boxes color="#ffffff" size={24} />
+          </div>
+        </div>
+
+        <h2 style={{ textAlign: 'center', color: '#0f172a', marginBottom: '0.5rem', marginTop: 0, fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.02em', fontFamily: "'Outfit', sans-serif" }}>Create Account</h2>
+        <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '2.2rem', fontSize: '0.9rem', fontWeight: '500' }}>Get started with Hari Krupa Engineering ERP.</p>
         
         {error && (
-          <div style={{ backgroundColor: '#fef2f2', color: '#b91c1c', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', border: '1px solid #f87171' }}>
+          <div style={{ backgroundColor: '#fef2f2', color: '#ef4444', padding: '0.85rem', borderRadius: '12px', marginBottom: '1.5rem', border: '1px solid rgba(239, 68, 68, 0.15)', fontSize: '0.85rem', fontWeight: '500' }}>
             {error}
           </div>
         )}
@@ -87,9 +104,9 @@ const Register = () => {
             required 
           />
           
-          <div style={{ marginBottom: '1.5rem', width: '100%' }}>
-            <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '500', color: '#374151', fontSize: '0.95rem' }}>
-              Role <span style={{ color: '#ef4444' }}>*</span>
+          <div style={{ marginBottom: '1.75rem', width: '100%' }}>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '600', color: '#374151', fontSize: '0.9rem' }}>
+              Choose Portal Access <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <select
               name="role"
@@ -97,12 +114,14 @@ const Register = () => {
               onChange={handleChange}
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                borderRadius: '6px',
-                border: '1px solid #d1d5db',
+                padding: '0.75rem 1rem',
+                borderRadius: '12px',
+                border: '1px solid rgba(15, 23, 42, 0.08)',
                 outline: 'none',
-                fontSize: '1rem',
-                backgroundColor: '#f9fafb'
+                fontSize: '0.95rem',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease'
               }}
               required
             >
@@ -112,13 +131,25 @@ const Register = () => {
             </select>
           </div>
 
-          <Button type="submit" loading={loading} variant="primary">
-            Register Account
+          <Button 
+            type="submit" 
+            loading={loading} 
+            variant="primary" 
+            style={{ 
+              borderRadius: '12px', 
+              padding: '0.85rem', 
+              fontWeight: '600', 
+              backgroundColor: 'var(--color-primary)', 
+              color: '#ffffff',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)'
+            }}
+          >
+            Create Account
           </Button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.95rem', color: '#4b5563' }}>
-          Already have an account? <Link to="/login" style={{ color: '#16a34a', textDecoration: 'none', fontWeight: '600' }}>Log In</Link>
+        <p style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.9rem', color: '#64748b', fontWeight: '500' }}>
+          Already have an account? <Link to="/login" style={{ color: '#10b981', textDecoration: 'none', fontWeight: '600' }}>Sign In</Link>
         </p>
       </div>
     </div>

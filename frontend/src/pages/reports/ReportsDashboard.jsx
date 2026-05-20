@@ -22,14 +22,12 @@ const fmtINR = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { maximumFrac
 const fmtNum = (n) => Number(n || 0).toLocaleString('en-IN');
 
 // ── Status colours for pie chart ────────────────────────────────────────────
-const STATUS_COLORS = { pending: '#f59e0b', completed: '#16a34a', cancelled: '#ef4444' };
+const STATUS_COLORS = { pending: 'var(--color-warning)', completed: 'var(--color-primary)', cancelled: 'var(--color-danger)' };
 
 // ── Reusable KPI Card ────────────────────────────────────────────────────────
 const KPICard = ({ title, value, sub, icon, accent, link }) => (
     <Link to={link || '#'} style={{ textDecoration: 'none' }}>
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', padding: '1.5rem', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', position: 'relative', overflow: 'hidden', cursor: 'pointer', transition: 'box-shadow 0.2s, transform 0.2s' }}
-            onMouseOver={e => { e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseOut={e => { e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.07)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+        <div className="brutal-card" style={{ padding: '1.5rem', position: 'relative', overflow: 'hidden', cursor: 'pointer' }}>
             {/* Background blob */}
             <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '90px', height: '90px', borderRadius: '50%', backgroundColor: accent, opacity: 0.08 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
@@ -38,11 +36,11 @@ const KPICard = ({ title, value, sub, icon, accent, link }) => (
                     <h2 style={{ margin: 0, fontSize: '2rem', fontWeight: '900', color: '#111827', lineHeight: 1 }}>{value}</h2>
                     {sub && <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.78rem', color: '#9ca3af' }}>{sub}</p>}
                 </div>
-                <div style={{ padding: '0.75rem', borderRadius: '12px', backgroundColor: `${accent}18`, color: accent }}>
+                <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-brutal)', backgroundColor: 'var(--color-white)', color: 'var(--color-black)', border: 'var(--border-thick)', boxShadow: 'var(--shadow-brutal-sm)' }}>
                     {icon}
                 </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: '600', color: accent }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: '900', color: 'var(--color-black)' }}>
                 View Details <ArrowUpRight size={14} />
             </div>
         </div>
@@ -51,9 +49,9 @@ const KPICard = ({ title, value, sub, icon, accent, link }) => (
 
 // ── Chart wrapper card ────────────────────────────────────────────────────────
 const ChartCard = ({ title, children, action }) => (
-    <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: '700', color: '#1f2937' }}>{title}</h3>
+    <div className="brutal-card">
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: 'var(--border-thick)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'var(--color-primary-light)' }}>
+            <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: '900', color: 'var(--color-black)', textTransform: 'uppercase' }}>{title}</h3>
             {action}
         </div>
         <div style={{ padding: '1.25rem 1.5rem' }}>{children}</div>
@@ -112,10 +110,10 @@ const ReportsDashboard = () => {
     );
 
     const kpis = [
-        { title: 'Total Orders',    value: fmtNum(summary?.totalOrders),   icon: <ShoppingCart size={26} />, accent: '#3b82f6', link: '/orders',    sub: 'All time orders' },
-        { title: 'Total Revenue',   value: fmtINR(summary?.totalRevenue),  icon: <IndianRupee size={26} />,  accent: '#16a34a', link: '/orders',    sub: 'From invoices (incl. GST)' },
-        { title: 'Total Products',  value: fmtNum(summary?.totalProducts), icon: <Package size={26} />,      accent: '#8b5cf6', link: '/products',  sub: 'Active products' },
-        { title: 'Low Stock Items', value: fmtNum(summary?.lowStockItems), icon: <AlertTriangle size={26} />,accent: '#ef4444', link: '/reports/inventory', sub: 'Below 10 units' },
+        { title: 'Total Orders',    value: fmtNum(summary?.totalOrders),   icon: <ShoppingCart size={26} />, accent: 'var(--color-primary-dark)', link: '/orders',    sub: 'All time orders' },
+        { title: 'Total Revenue',   value: fmtINR(summary?.totalRevenue),  icon: <IndianRupee size={26} />,  accent: 'var(--color-primary)', link: '/orders',    sub: 'From invoices (incl. GST)' },
+        { title: 'Total Products',  value: fmtNum(summary?.totalProducts), icon: <Package size={26} />,      accent: 'var(--color-primary-light)', link: '/products',  sub: 'Active products' },
+        { title: 'Low Stock Items', value: fmtNum(summary?.lowStockItems), icon: <AlertTriangle size={26} />,accent: 'var(--color-danger)', link: '/reports/inventory', sub: 'Below 10 units' },
     ];
 
     return (
@@ -123,9 +121,9 @@ const ReportsDashboard = () => {
             {/* Page Header */}
             <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
-                    <h1 style={{ margin: '0 0 0.4rem 0', fontSize: '2rem', fontWeight: '900', color: '#111827' }}>Analytics Dashboard</h1>
-                    <p style={{ margin: 0, color: '#6b7280', fontSize: '0.95rem' }}>
-                        Hello, <strong style={{ color: '#15803d' }}>{user?.name || role}</strong> — here's your business performance overview.
+                    <h1 style={{ margin: '0 0 0.4rem 0', fontSize: '2rem', fontWeight: '900', color: 'var(--color-black)', textTransform: 'uppercase' }}>Analytics Dashboard</h1>
+                    <p style={{ margin: 0, color: 'var(--color-black)', fontSize: '0.95rem', fontWeight: '600' }}>
+                        Hello, <strong style={{ color: 'var(--color-primary-dark)' }}>{user?.name || role}</strong> — here's your business performance overview.
                     </p>
                 </div>
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>

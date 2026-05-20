@@ -32,6 +32,7 @@ import InventoryReport from './pages/reports/InventoryReport';
 
 import SalaryDashboard from './pages/salary/SalaryDashboard';
 import MySalary from './pages/salary/MySalary';
+import ChatWidget from './components/chatWidget/ChatWidget';
 
 
 function App() {
@@ -101,6 +102,7 @@ function App() {
 
           </Route>
         </Routes>
+        <ChatWidget />
       </Router>
     </AuthProvider>
   );

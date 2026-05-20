@@ -20,32 +20,32 @@ const StockBadge = ({ qty }) => {
     const n = Number(qty);
     if (n <= 0) return (
         <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '4px',
-            fontSize: '0.7rem', fontWeight: '700', padding: '2px 8px',
-            borderRadius: '9999px', backgroundColor: '#fee2e2', color: '#b91c1c',
-            border: '1px solid #fecaca', textTransform: 'uppercase', letterSpacing: '0.04em'
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            fontSize: '0.75rem', fontWeight: '600', padding: '3px 10px',
+            borderRadius: '9999px', backgroundColor: 'var(--color-danger-light)', color: 'var(--color-danger)',
+            border: '1px solid rgba(239, 68, 68, 0.1)', textTransform: 'uppercase', letterSpacing: '0.04em'
         }}>
-            <XCircle size={10} /> Out of Stock
+            <XCircle size={12} /> Out of Stock
         </span>
     );
     if (n <= 10) return (
         <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '4px',
-            fontSize: '0.7rem', fontWeight: '700', padding: '2px 8px',
-            borderRadius: '9999px', backgroundColor: '#fef3c7', color: '#b45309',
-            border: '1px solid #fde68a', textTransform: 'uppercase', letterSpacing: '0.04em'
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            fontSize: '0.75rem', fontWeight: '600', padding: '3px 10px',
+            borderRadius: '9999px', backgroundColor: 'var(--color-warning-light)', color: 'var(--color-warning)',
+            border: '1px solid rgba(245, 158, 11, 0.1)', textTransform: 'uppercase', letterSpacing: '0.04em'
         }}>
-            <AlertTriangle size={10} /> Low Stock ({n})
+            <AlertTriangle size={12} /> Low Stock ({n})
         </span>
     );
     return (
         <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '4px',
-            fontSize: '0.7rem', fontWeight: '700', padding: '2px 8px',
-            borderRadius: '9999px', backgroundColor: '#dcfce7', color: '#166534',
-            border: '1px solid #bbf7d0', textTransform: 'uppercase', letterSpacing: '0.04em'
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            fontSize: '0.75rem', fontWeight: '600', padding: '3px 10px',
+            borderRadius: '9999px', backgroundColor: 'var(--color-success-light)', color: 'var(--color-success)',
+            border: '1px solid rgba(16, 185, 129, 0.1)', textTransform: 'uppercase', letterSpacing: '0.04em'
         }}>
-            <CheckCircle2 size={10} /> In Stock ({n})
+            <CheckCircle2 size={12} /> In Stock ({n})
         </span>
     );
 };
@@ -53,10 +53,11 @@ const StockBadge = ({ qty }) => {
 const SummaryRow = ({ label, value, bold, large, accent }) => (
     <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        fontSize: large ? '1.1rem' : '0.875rem',
-        fontWeight: bold ? '800' : '500',
-        color: accent || (bold ? '#111827' : '#4b5563'),
-        padding: large ? '0.75rem 0 0' : '0'
+        fontSize: large ? '1.15rem' : '0.9rem',
+        fontWeight: bold ? '700' : '500',
+        color: accent || (bold ? 'var(--color-black)' : 'var(--color-gray-dark)'),
+        padding: large ? '0.75rem 0 0' : '0',
+        fontFamily: large ? "'Outfit', sans-serif" : "'Inter', sans-serif"
     }}>
         <span>{label}</span>
         <span>{value}</span>
@@ -189,36 +190,36 @@ const CreateOrder = () => {
 
     // ── Loading state ──────────────────────────────────────────────────────
     if (loading) return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '420px', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-            <Loader2 size={44} color="#16a34a" style={{ animation: 'spin 1.2s linear infinite' }} />
-            <p style={{ color: '#6b7280', fontWeight: '500', margin: 0 }}>Loading product catalogue…</p>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '420px', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
+            <Loader2 size={44} color="var(--color-primary)" style={{ animation: 'spin 1.2s linear infinite' }} />
+            <p style={{ color: 'var(--color-gray-dark)', fontWeight: '500', margin: 0, fontFamily: "'Outfit', sans-serif", fontSize: '1.1rem' }}>Loading product catalogue…</p>
             <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
         </div>
     );
 
     // ─────────────────────────────────────────────────────────────────────
     return (
-        <div style={{ animation: 'fadeIn 0.3s ease', fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ animation: 'fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)', fontFamily: "'Inter', sans-serif" }}>
             {/* Page header */}
-            <div style={{ marginBottom: '2rem' }}>
-                <h1 style={{ margin: '0 0 0.35rem 0', fontSize: '1.875rem', fontWeight: '800', color: '#111827' }}>
+            <div style={{ marginBottom: '2.5rem' }}>
+                <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '2.25rem', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--color-black)' }}>
                     Create New Order
                 </h1>
-                <p style={{ margin: 0, color: '#6b7280', fontSize: '0.925rem' }}>
-                    Select products, pick a variant, enter quantity — GST calculated automatically.
+                <p style={{ margin: 0, color: 'var(--color-gray-dark)', fontSize: '1rem', fontWeight: '400' }}>
+                    Select products, pick a variant, enter quantity — GST is calculated automatically.
                 </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '2rem', alignItems: 'start' }}>
+            <div className="order-grid">
 
                 {/* ── LEFT: Item cards ─────────────────────────────────── */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
-                    {/* Column labels */}
-                    <div style={{
-                        display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px',
-                        gap: '0.75rem', padding: '0 0.5rem',
-                        fontSize: '0.72rem', fontWeight: '700', color: '#9ca3af',
+                    {/* Column labels (hidden on smaller screens where cards stack) */}
+                    <div className="order-labels" style={{
+                        display: 'grid', gridTemplateColumns: '2fr 2fr 1.2fr 44px',
+                        gap: '1rem', padding: '0 0.5rem',
+                        fontSize: '0.75rem', fontWeight: '700', color: 'var(--color-gray-dark)',
                         textTransform: 'uppercase', letterSpacing: '0.06em'
                     }}>
                         <span>Product</span>
@@ -228,32 +229,20 @@ const CreateOrder = () => {
                     </div>
 
                     {enrichedRows.map((row, index) => (
-                        <div key={index} style={{
-                            backgroundColor: '#ffffff',
-                            border: `1.5px solid ${row.variant_id && !row.stockOk ? '#fecaca' : '#e5e7eb'}`,
-                            borderRadius: '12px',
-                            padding: '1.25rem',
-                            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                            transition: 'border-color 0.2s'
-                        }}>
-                            <div style={{
-                                display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px',
-                                gap: '0.75rem', alignItems: 'center'
-                            }}>
+                        <div key={index} className={`item-card ${row.variant_id && !row.stockOk ? 'item-card-out-of-stock' : ''}`}>
+                            <div className="item-card-grid">
 
                                 {/* Product select */}
                                 <div>
                                     <div style={{ position: 'relative' }}>
-                                        <Package size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none' }} />
-                                        <ChevronDown size={13} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none' }} />
+                                        <Package size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gray-dark)', pointerEvents: 'none' }} />
+                                        <ChevronDown size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gray-dark)', pointerEvents: 'none' }} />
                                         <select
                                             value={row.product_id}
                                             onChange={e => updateRow(index, 'product_id', e.target.value)}
                                             style={{
-                                                width: '100%', padding: '0.65rem 2rem 0.65rem 2.1rem',
-                                                border: '1px solid #d1d5db', borderRadius: '8px',
-                                                backgroundColor: '#f9fafb', fontSize: '0.875rem',
-                                                color: '#111827', appearance: 'none', cursor: 'pointer', boxSizing: 'border-box'
+                                                width: '100%', paddingLeft: '2.5rem', paddingRight: '2.25rem',
+                                                appearance: 'none', cursor: 'pointer', boxSizing: 'border-box'
                                             }}
                                         >
                                             <option value="">Select product…</option>
@@ -265,18 +254,15 @@ const CreateOrder = () => {
                                 </div>
 
                                 {/* Variant select */}
-                                <div style={{ opacity: row.product_id ? 1 : 0.5 }}>
+                                <div style={{ opacity: row.product_id ? 1 : 0.6, transition: 'opacity 0.2s' }}>
                                     <div style={{ position: 'relative' }}>
-                                        <ChevronDown size={13} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none' }} />
+                                        <ChevronDown size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gray-dark)', pointerEvents: 'none' }} />
                                         <select
                                             value={row.variant_id}
                                             onChange={e => updateRow(index, 'variant_id', e.target.value)}
                                             disabled={!row.product_id}
                                             style={{
-                                                width: '100%', padding: '0.65rem 2rem 0.65rem 0.75rem',
-                                                border: '1px solid #d1d5db', borderRadius: '8px',
-                                                backgroundColor: row.product_id ? '#f9fafb' : '#f3f4f6',
-                                                fontSize: '0.875rem', color: '#111827',
+                                                width: '100%', paddingRight: '2.25rem',
                                                 appearance: 'none', cursor: row.product_id ? 'pointer' : 'not-allowed',
                                                 boxSizing: 'border-box'
                                             }}
@@ -293,43 +279,35 @@ const CreateOrder = () => {
 
                                     {/* Stock badge shown below variant dropdown */}
                                     {row.variant_id && (
-                                        <div style={{ marginTop: '5px' }}>
+                                        <div style={{ marginTop: '6px', display: 'flex' }}>
                                             <StockBadge qty={row.stock} />
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Quantity input */}
-                                <input
-                                    type="number"
-                                    min="1"
-                                    step="1"
-                                    value={row.quantity}
-                                    onChange={e => updateRow(index, 'quantity', e.target.value)}
-                                    disabled={!row.variant_id || !row.stockOk}
-                                    placeholder="Qty"
-                                    style={{
-                                        padding: '0.65rem 0.75rem',
-                                        border: `1px solid ${row.qty > (row.stock ?? Infinity) ? '#fca5a5' : '#d1d5db'}`,
-                                        borderRadius: '8px',
-                                        backgroundColor: (row.variant_id && row.stockOk) ? '#fff' : '#f3f4f6',
-                                        fontSize: '0.875rem', color: '#111827',
-                                        width: '100%', boxSizing: 'border-box',
-                                        cursor: (row.variant_id && row.stockOk) ? 'text' : 'not-allowed'
-                                    }}
-                                />
+                                <div>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        step="1"
+                                        value={row.quantity}
+                                        onChange={e => updateRow(index, 'quantity', e.target.value)}
+                                        disabled={!row.variant_id || !row.stockOk}
+                                        placeholder="Qty"
+                                        style={{
+                                            width: '100%', boxSizing: 'border-box',
+                                            cursor: (row.variant_id && row.stockOk) ? 'text' : 'not-allowed',
+                                            borderColor: row.qty > (row.stock ?? Infinity) ? 'var(--color-danger) !important' : ''
+                                        }}
+                                    />
+                                </div>
 
                                 {/* Remove row */}
                                 <button
                                     onClick={() => removeRow(index)}
-                                    style={{
-                                        width: '44px', height: '44px', border: '1px solid #fecaca',
-                                        borderRadius: '8px', backgroundColor: '#fef2f2', color: '#ef4444',
-                                        cursor: 'pointer', display: 'flex', alignItems: 'center',
-                                        justifyContent: 'center', flexShrink: 0, transition: 'background 0.2s'
-                                    }}
-                                    onMouseOver={e => e.currentTarget.style.backgroundColor = '#fee2e2'}
-                                    onMouseOut={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
+                                    className="trash-btn"
+                                    title="Remove Item"
                                 >
                                     <Trash2 size={16} />
                                 </button>
@@ -338,13 +316,13 @@ const CreateOrder = () => {
                             {/* Out-of-stock warning inline */}
                             {row.variant_id && !row.stockOk && (
                                 <div style={{
-                                    marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem',
-                                    padding: '0.6rem 0.875rem', backgroundColor: '#fef2f2',
-                                    borderRadius: '6px', border: '1px solid #fecaca'
+                                    marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.65rem',
+                                    padding: '0.75rem 1rem', backgroundColor: 'var(--color-danger-light)',
+                                    borderRadius: 'var(--radius-control)', border: '1px solid rgba(239, 68, 68, 0.15)'
                                 }}>
-                                    <XCircle size={14} color="#b91c1c" />
-                                    <span style={{ fontSize: '0.8rem', color: '#b91c1c', fontWeight: '600' }}>
-                                        This variant is out of stock. Please choose another.
+                                    <XCircle size={15} color="var(--color-danger)" />
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-danger)', fontWeight: '600' }}>
+                                        This variant is currently out of stock. Please choose another product or variant.
                                     </span>
                                 </div>
                             )}
@@ -352,14 +330,14 @@ const CreateOrder = () => {
                             {/* Subtotal row */}
                             {row.subtotal > 0 && row.stockOk && (
                                 <div style={{
-                                    marginTop: '0.75rem', paddingTop: '0.75rem',
-                                    borderTop: '1px dashed #e5e7eb',
+                                    marginTop: '1rem', paddingTop: '1rem',
+                                    borderTop: '1px dashed rgba(15, 23, 42, 0.08)',
                                     display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                                 }}>
-                                    <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-gray-dark)' }}>
                                         {row.qty} {row.variant?.unit} × ₹{fmt(row.price)}
                                     </span>
-                                    <span style={{ fontSize: '0.95rem', fontWeight: '700', color: '#16a34a' }}>
+                                    <span style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--color-primary-hover)', fontFamily: "'Outfit', sans-serif" }}>
                                         ₹{fmt(row.subtotal)}
                                     </span>
                                 </div>
@@ -370,65 +348,53 @@ const CreateOrder = () => {
                     {/* Add row button */}
                     <button
                         onClick={addRow}
-                        style={{
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            gap: '0.5rem', padding: '0.85rem',
-                            border: '2px dashed #d1d5db', borderRadius: '10px',
-                            backgroundColor: 'transparent', color: '#6b7280',
-                            cursor: 'pointer', fontSize: '0.9rem', fontWeight: '600', transition: 'all 0.2s'
-                        }}
-                        onMouseOver={e => { e.currentTarget.style.borderColor = '#16a34a'; e.currentTarget.style.color = '#16a34a'; e.currentTarget.style.backgroundColor = '#f0fdf4'; }}
-                        onMouseOut={e => { e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+                        className="plus-btn"
                     >
                         <Plus size={18} /> Add Another Item
                     </button>
                 </div>
 
                 {/* ── RIGHT: Bill summary card ─────────────────────────── */}
-                <div style={{ position: 'sticky', top: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div style={{
-                        backgroundColor: '#ffffff', borderRadius: '14px',
-                        border: '1.5px solid #e5e7eb', boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-                        overflow: 'hidden'
-                    }}>
+                <div className="checkout-sidebar">
+                    <div className="glass-panel" style={{ overflow: 'hidden', border: '1px solid rgba(16, 185, 129, 0.12)' }}>
                         {/* Card header */}
                         <div style={{
-                            padding: '0.875rem 1.25rem', backgroundColor: '#f0fdf4',
-                            borderBottom: '1px solid #bbf7d0',
-                            display: 'flex', alignItems: 'center', gap: '0.5rem'
+                            padding: '1.25rem 1.5rem', backgroundColor: 'var(--color-primary-light)',
+                            borderBottom: '1px solid rgba(16, 185, 129, 0.1)',
+                            display: 'flex', alignItems: 'center', gap: '0.75rem'
                         }}>
-                            <ShoppingCart size={16} color="#16a34a" />
-                            <h3 style={{ margin: 0, fontSize: '0.8rem', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                            <ShoppingCart size={18} color="var(--color-primary)" />
+                            <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: '800', color: 'var(--color-primary-dark)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                 Bill Summary
                             </h3>
                         </div>
 
-                        <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <SummaryRow label="Items in order" value={enrichedRows.filter(r => r.subtotal > 0).length} />
                             <SummaryRow label="Taxable Amount" value={`₹${fmt(taxableAmount)}`} />
 
-                            <div style={{ height: '1px', backgroundColor: '#f3f4f6' }} />
+                            <div style={{ height: '1px', backgroundColor: 'rgba(15, 23, 42, 0.05)' }} />
 
                             {/* GST block */}
                             <div style={{
-                                backgroundColor: '#f9fafb', borderRadius: '8px',
-                                padding: '0.875rem', border: '1px solid #e5e7eb',
-                                display: 'flex', flexDirection: 'column', gap: '0.5rem'
+                                backgroundColor: 'rgba(15, 23, 42, 0.02)', borderRadius: 'var(--radius-control)',
+                                padding: '1rem', border: '1px solid rgba(15, 23, 42, 0.04)',
+                                display: 'flex', flexDirection: 'column', gap: '0.65rem'
                             }}>
-                                <p style={{ margin: '0 0 0.3rem 0', fontSize: '0.7rem', fontWeight: '800', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                <p style={{ margin: '0 0 0.4rem 0', fontSize: '0.75rem', fontWeight: '800', color: 'var(--color-gray-dark)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                     GST Breakdown (18%)
                                 </p>
                                 <SummaryRow label="CGST (9%)" value={`₹${fmt(cgst)}`} />
                                 <SummaryRow label="SGST (9%)" value={`₹${fmt(sgst)}`} />
-                                <div style={{ height: '1px', backgroundColor: '#e5e7eb' }} />
+                                <div style={{ height: '1px', backgroundColor: 'rgba(15, 23, 42, 0.06)' }} />
                                 <SummaryRow label="Total GST" value={`₹${fmt(totalTax)}`} bold />
                             </div>
 
                             {/* Grand total */}
-                            <div style={{ borderTop: '2px solid #16a34a', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontWeight: '800', fontSize: '1rem', color: '#111827' }}>Grand Total</span>
-                                <span style={{ fontWeight: '900', fontSize: '1.6rem', color: '#166534', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                                    <IndianRupee size={20} />{fmt(finalAmount)}
+                            <div style={{ borderTop: '2px solid var(--color-primary)', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontWeight: '800', fontSize: '1.1rem', color: 'var(--color-black)', fontFamily: "'Outfit', sans-serif" }}>Grand Total</span>
+                                <span style={{ fontWeight: '900', fontSize: '1.8rem', color: 'var(--color-primary-hover)', display: 'flex', alignItems: 'center', gap: '2px', fontFamily: "'Outfit', sans-serif" }}>
+                                    <IndianRupee size={22} style={{ strokeWidth: 2.5 }} />{fmt(finalAmount)}
                                 </span>
                             </div>
                         </div>
@@ -437,12 +403,13 @@ const CreateOrder = () => {
                     {/* Out-of-stock warning summary */}
                     {hasOutOfStock && (
                         <div style={{
-                            display: 'flex', alignItems: 'flex-start', gap: '0.6rem',
-                            padding: '0.875rem', backgroundColor: '#fef2f2',
-                            border: '1px solid #fecaca', borderRadius: '8px'
+                            display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
+                            padding: '1rem', backgroundColor: 'var(--color-danger-light)',
+                            border: '1px solid rgba(239, 68, 68, 0.15)', borderRadius: 'var(--radius-control)',
+                            animation: 'shake 0.4s ease'
                         }}>
-                            <XCircle size={16} color="#b91c1c" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
-                            <p style={{ margin: 0, fontSize: '0.8rem', color: '#b91c1c', lineHeight: '1.5', fontWeight: '600' }}>
+                            <XCircle size={18} color="var(--color-danger)" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
+                            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-danger)', lineHeight: '1.5', fontWeight: '600' }}>
                                 One or more items are out of stock. Remove or replace them before placing the order.
                             </p>
                         </div>
@@ -451,13 +418,13 @@ const CreateOrder = () => {
                     {/* No items hint */}
                     {!hasItems && !hasOutOfStock && (
                         <div style={{
-                            display: 'flex', alignItems: 'flex-start', gap: '0.6rem',
-                            padding: '0.875rem', backgroundColor: '#fffbeb',
-                            border: '1px solid #fde68a', borderRadius: '8px'
+                            display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
+                            padding: '1rem', backgroundColor: 'var(--color-warning-light)',
+                            border: '1px solid rgba(245, 158, 11, 0.12)', borderRadius: 'var(--radius-control)'
                         }}>
-                            <AlertTriangle size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
-                            <p style={{ margin: 0, fontSize: '0.8rem', color: '#b45309', lineHeight: '1.5' }}>
-                                Select a product, variant and quantity to see live pricing.
+                            <AlertTriangle size={18} color="var(--color-warning)" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
+                            <p style={{ margin: 0, fontSize: '0.85rem', color: '#b45309', lineHeight: '1.5', fontWeight: '500' }}>
+                                Select a product, variant and quantity to see live pricing and place your order.
                             </p>
                         </div>
                     )}
@@ -468,25 +435,27 @@ const CreateOrder = () => {
                         onClick={handleSubmit}
                         disabled={submitting || !hasItems || hasOutOfStock}
                         style={{
-                            width: '100%', padding: '1rem',
-                            backgroundColor: (submitting || !hasItems || hasOutOfStock) ? '#86efac' : '#16a34a',
-                            color: 'white', border: 'none', borderRadius: '10px',
+                            width: '100%', padding: '1.1rem',
+                            backgroundColor: (submitting || !hasItems || hasOutOfStock) ? 'var(--color-primary-light)' : 'var(--color-primary)',
+                            color: (submitting || !hasItems || hasOutOfStock) ? 'var(--color-gray-dark)' : 'white',
+                            border: 'none', borderRadius: 'var(--radius-control)',
                             fontWeight: '700', fontSize: '1rem',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                            fontFamily: "'Outfit', sans-serif",
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.65rem',
                             cursor: (submitting || !hasItems || hasOutOfStock) ? 'not-allowed' : 'pointer',
-                            transition: 'background-color 0.2s',
-                            boxShadow: (hasItems && !hasOutOfStock) ? '0 4px 12px rgba(22,163,74,0.4)' : 'none',
+                            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: (hasItems && !hasOutOfStock) ? '0 10px 24px -4px rgba(16, 185, 129, 0.35)' : 'none',
                             position: 'relative', zIndex: 50, pointerEvents: 'auto'
                         }}
-                        onMouseOver={e => { if (!submitting && hasItems && !hasOutOfStock) e.currentTarget.style.backgroundColor = '#15803d'; }}
-                        onMouseOut={e => { if (!submitting && hasItems && !hasOutOfStock) e.currentTarget.style.backgroundColor = '#16a34a'; }}
+                        onMouseOver={e => { if (!submitting && hasItems && !hasOutOfStock) { e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 28px -4px rgba(16, 185, 129, 0.45)'; } }}
+                        onMouseOut={e => { if (!submitting && hasItems && !hasOutOfStock) { e.currentTarget.style.backgroundColor = 'var(--color-primary)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 24px -4px rgba(16, 185, 129, 0.35)'; } }}
                     >
-                        {submitting ? <Loader2 size={18} style={{ animation: 'spin 1.2s linear infinite' }} /> : <ShoppingCart size={18} />}
+                        {submitting ? <Loader2 size={20} className="spin-loader" /> : <ShoppingCart size={20} />}
                         {submitting ? 'Placing Order…' : 'Place Order'}
                     </button>
 
                     {hasItems && !hasOutOfStock && (
-                        <p style={{ margin: 0, textAlign: 'center', fontSize: '0.75rem', color: '#9ca3af' }}>
+                        <p style={{ margin: 0, textAlign: 'center', fontSize: '0.8rem', color: 'var(--color-gray-dark)' }}>
                             A confirmation dialog will appear before submitting.
                         </p>
                     )}
@@ -494,8 +463,145 @@ const CreateOrder = () => {
             </div>
 
             <style>{`
-                @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-                @keyframes spin   { 100% { transform: rotate(360deg); } }
+                .order-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 380px;
+                    gap: 2rem;
+                    align-items: start;
+                }
+                
+                @media (max-width: 1024px) {
+                    .order-grid {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
+                    .order-labels {
+                        display: none !important;
+                    }
+                }
+                
+                .item-card {
+                    background: var(--color-white);
+                    border: 1px solid rgba(15, 23, 42, 0.06);
+                    border-radius: var(--radius-premium);
+                    padding: 1.5rem;
+                    box-shadow: var(--shadow-premium);
+                    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                
+                .item-card:hover {
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-premium-hover);
+                    border-color: rgba(16, 185, 129, 0.15);
+                }
+                
+                .item-card-out-of-stock {
+                    border-color: var(--color-danger) !important;
+                    box-shadow: 0 4px 24px rgba(239, 68, 68, 0.06) !important;
+                }
+                
+                .item-card-grid {
+                    display: grid;
+                    grid-template-columns: 2fr 2fr 1.2fr 44px;
+                    gap: 1.25rem;
+                    align-items: center;
+                }
+                
+                @media (max-width: 768px) {
+                    .item-card-grid {
+                        grid-template-columns: 1fr 1fr;
+                        gap: 1rem;
+                    }
+                    .item-card-grid > :nth-child(1) {
+                        grid-column: span 2;
+                    }
+                    .item-card-grid > :nth-child(2) {
+                        grid-column: span 2;
+                    }
+                    .item-card-grid > :nth-child(4) {
+                        grid-column: span 2;
+                        justify-self: stretch;
+                        width: 100% !important;
+                    }
+                }
+                
+                .trash-btn {
+                    width: 44px;
+                    height: 44px;
+                    border: 1px solid rgba(239, 68, 68, 0.1);
+                    border-radius: var(--radius-control);
+                    background-color: var(--color-danger-light);
+                    color: var(--color-danger);
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                
+                .trash-btn:hover {
+                    background-color: var(--color-danger);
+                    color: var(--color-white);
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+                }
+                
+                .trash-btn:active {
+                    transform: scale(0.95);
+                }
+                
+                .plus-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    padding: 1.1rem;
+                    border: 2px dashed rgba(16, 185, 129, 0.25);
+                    border-radius: var(--radius-control);
+                    background-color: transparent;
+                    color: var(--color-primary);
+                    cursor: pointer;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                
+                .plus-btn:hover {
+                    border-color: var(--color-primary);
+                    background-color: var(--color-primary-light);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
+                }
+                
+                .plus-btn:active {
+                    transform: translateY(0);
+                }
+                
+                .checkout-sidebar {
+                    position: sticky;
+                    top: 1.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.25rem;
+                }
+                
+                .spin-loader {
+                    animation: spin 1.2s linear infinite;
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(12px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes spin {
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-4px); }
+                    75% { transform: translateX(4px); }
+                }
             `}</style>
         </div>
     );

@@ -1,34 +1,30 @@
-const Button = ({ children, type = "button", onClick, disabled = false, loading = false, variant = "primary", style = {} }) => {
+const Button = ({ children, type = "button", onClick, disabled = false, loading = false, variant = "primary", style = {}, className = "" }) => {
   const baseStyle = {
     width: '100%',
     padding: '0.75rem 1.5rem',
-    borderRadius: '6px',
     fontSize: '1rem',
-    fontWeight: '600',
-    cursor: disabled || loading ? 'not-allowed' : 'pointer',
-    border: 'none',
-    transition: 'background-color 0.2s, transform 0.1s',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    opacity: disabled || loading ? 0.7 : 1,
     ...style
   };
 
   const variants = {
     primary: {
-      backgroundColor: '#16a34a',
-      color: 'white',
+      backgroundColor: 'var(--color-primary)',
+      color: 'var(--color-black)',
     },
     secondary: {
-      backgroundColor: '#f3f4f6',
-      color: '#374151',
-      border: '1px solid #d1d5db'
+      backgroundColor: 'var(--color-primary-light)',
+      color: 'var(--color-black)',
+    },
+    danger: {
+      backgroundColor: 'var(--color-danger)',
+      color: 'var(--color-white)',
     },
     outline: {
-      backgroundColor: 'transparent',
-      color: '#16a34a',
-      border: '2px solid #16a34a'
+      backgroundColor: 'var(--color-white)',
+      color: 'var(--color-black)',
     }
   };
 
@@ -40,14 +36,7 @@ const Button = ({ children, type = "button", onClick, disabled = false, loading 
       onClick={onClick} 
       disabled={disabled || loading} 
       style={combinedStyle}
-      onMouseOver={(e) => {
-         if(!disabled && !loading && variant === 'primary') e.currentTarget.style.backgroundColor = '#15803d';
-         if(!disabled && !loading && variant === 'outline') e.currentTarget.style.backgroundColor = '#f0fdf4';
-      }}
-      onMouseOut={(e) => {
-         if(!disabled && !loading && variant === 'primary') e.currentTarget.style.backgroundColor = '#16a34a';
-         if(!disabled && !loading && variant === 'outline') e.currentTarget.style.backgroundColor = 'transparent'; 
-      }}
+      className={`brutal-btn ${className}`}
     >
       {loading ? 'Processing...' : children}
     </button>
